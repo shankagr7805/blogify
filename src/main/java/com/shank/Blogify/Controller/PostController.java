@@ -1,10 +1,12 @@
 package com.shank.Blogify.Controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,8 @@ import com.shank.Blogify.models.Account;
 import com.shank.Blogify.models.Post;
 import com.shank.Blogify.serivces.AccountService;
 import com.shank.Blogify.serivces.PostService;
+import com.shank.Blogify.util.CloudinaryUtil;
+import com.shank.Blogify.util.ImageUtil;
 
 @Controller
 public class PostController {
@@ -121,14 +125,38 @@ public class PostController {
     
     @GetMapping("/post/{id}/delete")
     @PreAuthorize("isAuthenticated()")
-    public String deletePost(@PathVariable Long id) {
-        Optional<Post> optionalpost = postService.getbyId(id);
-        if(optionalpost.isPresent()) {
-            Post post = optionalpost.get();
-            postService.delete(post);
+    public String deletePost(@PathVariable Long id, Principal principal) {
+
+        Optional<Post> optionalPost = postService.getbyId(id);
+        if (optionalPost.isEmpty()) {
             return "redirect:/";
-        } else {
-            return "redirect:/?error";
         }
+
+        Post post = optionalPost.get();
+
+        // 🔐 OWNER OR ADMIN CHECK (ADD THIS HERE)
+        boolean isOwner = post.getAccount().getEmail().equals(principal.getName());
+
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isOwner && !isAdmin) {
+            return "redirect:/?error=unauthorized";
+        }
+
+        // 🔥 DELETE CLOUDINARY IMAGES
+        List<String> imageUrls = ImageUtil.extractImageUrls(post.getBody());
+        for (String url : imageUrls) {
+            CloudinaryUtil.deleteByUrl(url);
+        }
+
+        // 🗑 DELETE POST
+        postService.delete(post);
+
+        return "redirect:/";
+
     }
 }
