@@ -1,28 +1,20 @@
 package com.shank.Blogify.Controller;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
 import jakarta.validation.Valid;
-import net.coobird.thumbnailator.Thumbnails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -34,10 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.shank.Blogify.models.Account;
 import com.shank.Blogify.serivces.AccountService;
 import com.shank.Blogify.serivces.EmailService;
-import com.shank.Blogify.util.AppUtil;
 import com.shank.Blogify.util.email.EmailDetails;
 
 @Controller
@@ -48,6 +41,9 @@ public class AccountController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Value("${password.token.reset.timeout.minutes}")
     private int password_token_timeout;
@@ -124,53 +120,41 @@ public class AccountController {
 
     @PostMapping("/update_photo")
     @PreAuthorize("isAuthenticated()")
-    public String updatePhoto(@RequestParam("file") MultipartFile file, RedirectAttributes attributes, Principal principal) {
-        if(file.isEmpty()) {
-            attributes.addFlashAttribute("error" , "No file uploaded");
+    public String updatePhoto(
+            @RequestParam("file") MultipartFile file,
+            RedirectAttributes attributes,
+            Principal principal
+    ) {
+        if (file.isEmpty()) {
+            attributes.addFlashAttribute("error", "No file uploaded");
             return "redirect:/profile";
-        } else {
-            String originalFileName = file.getOriginalFilename();
-            if (originalFileName == null || originalFileName.isEmpty()) {
-                attributes.addFlashAttribute("error", "Invalid file name");
-                return "redirect:/profile";
-            }
-            String fileName = StringUtils.cleanPath(originalFileName);
+        }
 
-            try {
-                int length = 10;
-                boolean useLetters = true;
-                boolean useNumbers = true;
-                String generatedString = RandomStringUtils.secure().next(length, useLetters, useNumbers);
-                String final_photo_name = generatedString + fileName;
-                String absolute_fileLocation = AppUtil.get_upload_path(final_photo_name);
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> uploadResult =
+                    cloudinary.uploader().upload(
+                            file.getBytes(),
+                            ObjectUtils.asMap(
+                                    "folder", "blogify/profile",
+                                    "resource_type", "image"
+                            )
+                    );
 
-                Path path = Paths.get(absolute_fileLocation);
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                attributes.addFlashAttribute("message", "Photo uploaded successfully!");
+            String imageUrl = uploadResult.get("secure_url").toString();
 
-                String authUser = "email";
-                if(principal != null) {
-                    authUser = principal.getName();
-                }
+            Account account = accountService.findOneByEmail(principal.getName())
+                    .orElseThrow();
 
-                Optional<Account> optionalAccount = accountService.findOneByEmail(authUser);
-                if(optionalAccount.isPresent()) {
-                    Account account = optionalAccount.get();
-                    Account account_by_id = accountService.findById(account.getId()).get();
-                    String relative_fileLocation = "/uploads/" + final_photo_name;
-                    account_by_id.setPhoto(relative_fileLocation);
-                    accountService.save(account_by_id);
-                }
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                return "redirect:/profile";
+            account.setPhoto(imageUrl);
+            accountService.save(account);
 
-            } catch (Exception e) {
-                return  "redirect:/profile/?error";
-            }
+            attributes.addFlashAttribute("message", "Photo updated successfully");
+            return "redirect:/profile";
+
+        } catch (Exception e) {
+            attributes.addFlashAttribute("error", "Photo upload failed");
+            return "redirect:/profile";
         }
     }
 
@@ -178,33 +162,29 @@ public class AccountController {
     @ResponseBody
     public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) {
 
-        String original = file.getOriginalFilename();
-        if (original == null || original.isBlank()) {
+        if (file.isEmpty()) {
             return Map.of(
                 "uploaded", false,
-                "error", Map.of("message", "Invalid file name")
+                "error", Map.of("message", "Empty file")
             );
         }
 
-        String cleanName = StringUtils.cleanPath(original);
-        String random = RandomStringUtils.secure().nextAlphanumeric(10);
-        String finalName = random + "_" + cleanName;
-
         try {
-            Path uploadDir = Paths.get("src/main/resources/static/uploads");
-            Files.createDirectories(uploadDir);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> uploadResult =
+                    cloudinary.uploader().upload(
+                            file.getBytes(),
+                            ObjectUtils.asMap(
+                                    "folder", "blogify/posts",
+                                    "resource_type", "image"
+                            )
+                    );
 
-            Path targetFile = uploadDir.resolve(finalName);
-
-            // 🔥 Resize + compress image
-            Thumbnails.of(file.getInputStream())
-                    .size(800, 800)          // max width & height
-                    .outputQuality(0.8)      // compression (80%)
-                    .toFile(targetFile.toFile());
+            String imageUrl = uploadResult.get("secure_url").toString();
 
             return Map.of(
                 "uploaded", true,
-                "url", "/uploads/" + finalName
+                "url", imageUrl
             );
 
         } catch (Exception e) {
