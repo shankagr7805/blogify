@@ -136,8 +136,12 @@ public class AccountController {
                     cloudinary.uploader().upload(
                             file.getBytes(),
                             ObjectUtils.asMap(
-                                    "folder", "blogify/profile",
-                                    "resource_type", "image"
+                                "folder", "blogify/posts",
+                                "width", 1200,
+                                "height", 1200,
+                                "crop", "limit",
+                                "quality", "auto",
+                                "fetch_format", "auto"
                             )
                     );
 
@@ -175,8 +179,12 @@ public class AccountController {
                     cloudinary.uploader().upload(
                             file.getBytes(),
                             ObjectUtils.asMap(
-                                    "folder", "blogify/posts",
-                                    "resource_type", "image"
+                                "folder", "blogify/posts",
+                                "width", 1200,
+                                "height", 1200,
+                                "crop", "limit",
+                                "quality", "auto",
+                                "fetch_format", "auto"
                             )
                     );
 
