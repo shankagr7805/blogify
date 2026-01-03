@@ -42,6 +42,7 @@ appLog.log
 
 # Environment / secrets
 secret.properties
+src/main/resources/secret.properties
 .env
 
 # H2
