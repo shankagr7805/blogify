@@ -100,6 +100,30 @@ a:focus {
     gap: 10%;
   }
 
+.posts img,
+.post-body img,
+.about_section img {
+  max-width: 100%;
+  height: auto;
+  max-height: 500px;
+  display: block;
+  margin: 20px auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .posts img {
+    max-height: 600px;
+  }
+}
+
+@media (max-width: 767px) {
+  .posts img {
+    max-height: 350px;
+  }
+}
+
 .action-btn {
   width: 25%;
   height: 50px;
