@@ -1,0 +1,12 @@
+{"properties": [
+    {
+        "name": "password.token.reset.timeout.minutes",
+        "type": "java.lang.String",
+        "description": "A description for 'password.token.reset.timeout.minutes'"
+    },
+    {
+      "name": "site.domain",
+      "type": "java.lang.String",
+      "description": "Base domain of the application (used for email links)"
+    }
+]}

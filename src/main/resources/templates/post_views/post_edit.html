@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}"></head>
+<body class="sub_page">
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="/images/nav-bg.png" alt="">
+    </div>
+    <!-- header section strats -->
+    <header th:replace="~{fragments/header :: header}"></header>
+    <!-- end header section -->
+  </div>
+
+  <!-- book section -->
+  <section class="food_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form_container">
+            <h3>
+                Edit Post
+            </h3>
+            <form th:action="@{'/post/{id}/edit' (id=${post.id})}" method="post" th:object="${post}">   <!--^ Added object from the addPost method of PostController -->
+              <div class="form-group">
+                <input type="hidden" id="account" name="account" th:field="*{account}" />  <!--^ Hidden field to bind the account *->for attaching an element.-->
+                <input id="title" th:field="*{title}" type="text" name="title" class="form-control" placeholder="Title" />
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="alert alert-danger" role="alert">Title error</p> 
+              </div>
+              <div class="form-group">
+                <textarea id="editor" th:field="*{body}" name="body"></textarea>
+                <p th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="alert alert-danger" role="alert">Body error</p> 
+              </div>
+              <button type="submit" class="btn btn-success btn-lg btn-block">Update Post</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end book section -->
+
+  <!-- footer section -->
+  <footer th:replace="~{fragments/footer :: footer}"></footer>
+  <!-- footer section -->
+<!-- Text Editor -->
+   <!-- CKEditor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+    <script>
+      ClassicEditor.create(document.querySelector('#editor'), {
+          ckfinder: {
+              uploadUrl: '/upload-image'
+          },
+          toolbar: [
+              'heading',
+              '|',
+              'bold', 'italic', 'link',
+              '|',
+              'imageUpload',
+              '|',
+              'undo', 'redo'
+          ]
+      }).catch(error => {
+          console.error(error);
+      });
+    </script>
+</body>
+
+</html>

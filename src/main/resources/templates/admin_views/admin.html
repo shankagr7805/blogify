@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}"></head>
+
+<body class="sub_page">
+
+<div class="hero_area">
+  <div class="bg-box">
+    <img src="/images/nav-bg.png" alt="">
+  </div>
+
+  <!-- Header -->
+  <header th:replace="~{fragments/header :: header}"></header>
+</div>
+
+<section class="about_section layout_padding">
+  <div class="container">
+
+    <h1 class="mb-4">Admin Dashboard</h1>
+
+    <!-- ================= POSTS TABLE ================= -->
+    <h3>All Posts</h3>
+    <table class="table table-dark table-bordered table-striped mt-3">
+      <thead >
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Created At</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="post : ${posts}">
+          <td th:text="${post.id}"></td>
+          <td th:text="${post.title}"></td>
+          <td th:text="${post.account.email}"></td>
+          <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+          <td>
+            <a th:href="@{'/admin/post/' + ${post.id} + '/delete'}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Delete this post?')">
+              Delete
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="my-5">
+
+    <!-- ================= USERS TABLE ================= -->
+    <h3>All Users</h3>
+    <table class="table table-dark table-bordered table-striped mt-3">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="user : ${users}">
+          <td th:text="${user.id}"></td>
+          <td th:text="${user.email}"></td>
+          <td th:text="${user.firstname + ' ' + user.lastname}"></td>
+          <td th:text="${user.role}"></td>
+          <td>
+            <a th:if="${user.role != 'ROLE_ADMIN'}"
+               th:href="@{'/admin/user/' + ${user.id} + '/make-admin'}"
+               class="btn btn-primary btn-sm"
+               onclick="return confirm('Make this account ADMIN?')">
+              Make Admin
+            </a>
+            <span th:if="${user.role == 'ROLE_ADMIN'}" class="badge bg-success">
+              ADMIN
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</section>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

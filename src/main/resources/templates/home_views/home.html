@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}"></head>
+<body class="sub_page">
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="images/nav-bg.png" alt="">
+    </div>
+    <!-- header section strats -->
+    <div th:replace="~{fragments/header :: header}"></div>
+    <!-- end header section -->
+  </div>
+
+  <!-- about section -->
+  <nav class="navbar navbar-light bg-white border-bottom">
+   <!-- Filters -->
+    <form class="form-inline" method="get" action="/">
+
+      <!-- Sort -->
+      <div class="input-group mr-3" style="height: min-content;">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="padding: 6px 6px; font-size: 12px;">Sort_by</span>
+        </div>
+        <select name="sort_by" class="form-select" style="font-size: 12px;">
+          <option value="createdAt">Created Date</option>
+          <option value="updatedAt">Updated Date</option>
+        </select>
+      </div>
+
+      <!-- Per Page -->
+      <div class="input-group mr-3" style="height: min-content;">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="padding: 6px 6px; font-size: 12px;">Per Page</span>
+        </div>
+        <select name="per_page" class="form-select">
+        <option value="2" selected>2</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        </select>
+      </div>
+      
+      <button class="btn btn-outline-primary px-3" style="font-size: 14px;">
+        Apply
+      </button>
+
+    </form>
+
+</nav>
+
+  <section class="about_section layout_padding">
+    <div class="container"> 
+      <div class="posts" th:each="post : ${posts}"> 
+        <h3><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">Post Title</a></h3>
+        <p class="post-meta" th:text="'Author : ' + ${post.account.firstname} + 
+        ' |  Created at : ' + ${#temporals.format(post.createdAt, 'dd MMM yyyy HH:mm')} +
+        ' |  Updated at : ' + ${#temporals.format(post.updatedAt, 'dd MMM yyyy HH:mm')}"></p>
+        <p th:utext="${post.body}">Post Body</p>
+        <hr color="grey"/>
+      </div>
+    </div>
+
+    <nav th:if="${links ne null}" aria-label="...">
+      <ul class="pagination justify-content-center">
+        <th:block th:each="link: ${links}">
+          <li class="page-item">
+            <th:block th:utext="${link}">Link</th:block>
+          </li>
+        </th:block>
+      </ul>
+    </nav>
+
+  </section>
+
+  <!-- end about section -->
+
+  <!-- footer section -->
+  <div th:replace="~{fragments/footer :: footer}"></div>
+  <!-- footer section -->
+
+</body>
+
+</html>
