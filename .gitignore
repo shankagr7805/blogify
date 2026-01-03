@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Maven
+/target/
+*.class
+
+# Logs
+*.log
+appLog.log
+
+# Environment / secrets
+secret.properties
+.env
+
+# H2
+*.mv.db
+*.trace.db
+
+
+# OS
+.DS_Store
+
+# Uploads (user files)
+src/main/resources/static/uploads/
