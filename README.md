@@ -1,10 +1,10 @@
-# Blogify – Spring Boot Web Application
+# 📝 Blogify – Full Stack Blogging Platform
 
-## 📌 Project Overview
-This is a beginner-friendly Spring Boot web application that demonstrates
-user registration, login, authentication, and role-based access control.
-The project follows the MVC (Model-View-Controller) architecture and
-uses modern Spring technologies.
+Blogify is a **production-ready full-stack blogging platform** built using **Spring Boot**, **Spring Security**, **Hibernate**, **Thymeleaf**, and **MySQL**.  
+It supports **authentication, role-based access control, rich-text posts with images, admin moderation, and cloud image storage**.
+
+🚀 **Live Demo:** *https://blogify-springboot.up.railway.app/*  
+📦 **Tech Stack:** Java, Spring Boot, Spring Security, Hibernate, Thymeleaf, MySQL, Cloudinary, Bootstrap
 
 ---
 
@@ -46,6 +46,53 @@ Thymeleaf is a server-side template engine used to render dynamic HTML pages.
 It integrates seamlessly with Spring MVC and Spring Security.
 
 ---
+## ✨ Features
+
+### 👤 User Features
+- User registration & login
+- Secure authentication using **Spring Security**
+- Profile management with profile photo upload
+- Create, edit, and delete blog posts
+- Rich-text editor with image uploads (CKEditor)
+- Password reset via email
+- Responsive UI
+
+### 🛡 Admin Features
+- Admin dashboard
+- View all users & posts
+- Delete any post
+- Role-based access control (USER / EDITOR / ADMIN)
+
+### 🖼 Image Handling
+- Image upload via **Cloudinary**
+- Automatic image resizing & compression
+- Cloud image cleanup when post is deleted
+
+### ⚙ System Features
+- Role-based authorization
+- Secure password hashing (BCrypt)
+- Environment-based configuration
+- Database seeding for initial users & posts
+- Production-ready logging setup
+
+---
+
+## 🧰 Tech Stack
+
+| Layer | Technology |
+|-----|-----------|
+| Backend | Java 21, Spring Boot |
+| Security | Spring Security |
+| ORM | Hibernate / JPA |
+| Database | MySQL (Production), H2 (Dev) |
+| Frontend | Thymeleaf, Bootstrap |
+| Image Storage | Cloudinary |
+| Editor | CKEditor |
+| Build Tool | Maven |
+| Deployment | Railway |
+
+---
+
 
 ## 🧩 Application Architecture
 
@@ -60,10 +107,11 @@ The application follows a layered architecture:
 
 ## 🔐 Security Overview
 
-- Users register and login using email and password
-- Passwords are stored in encrypted form
-- Role-based authorization is implemented using `ROLE_USER`
-- Protected pages can be accessed only after authentication
+-	Password hashing using BCrypt
+-	Role-based authorization with @PreAuthorize
+-	Only owners or admins can edit/delete posts
+-	Secure password reset tokens with expiry
+-	CSRF protection enabled
 
 ---
 
@@ -75,11 +123,64 @@ The application follows a layered architecture:
 
 ---
 
+## 🖼 Image Upload Flow
+
+- Upload via CKEditor
+- Stored on Cloudinary
+- Resized & compressed automatically
+- Deleted from Cloudinary when post is removed
+
+---
+
 ## ✅ Conclusion
 This project demonstrates the fundamentals of Spring Boot web development,
 including MVC architecture, database integration, security, and template rendering.
 It serves as a strong foundation for building real-world Java web applications.
 
+---
+
+## 🔧 Prerequisites to run this 
+
+- Java 21
+- Maven 3.9+
+- MySQL 8+
+- Git
+
+---
+
+## 🛠 Environment Setup
+
+### 1️⃣ Clone the Repository
+```
+git clone https://github.com/your-username/Blogify.git
+cd Blogify
+```
+### 2️⃣ Configure application.properties
+```
+spring.application.name=Blogify
+server.port=8080
+
+spring.datasource.url=jdbc:mysql://localhost:3306/blogify
+spring.datasource.username=YOUR_DB_USERNAME
+spring.datasource.password=YOUR_DB_PASSWORD
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+
+cloudinary.cloud-name=YOUR_CLOUD_NAME
+cloudinary.api-key=YOUR_API_KEY
+cloudinary.api-secret=YOUR_API_SECRET
+
+spring.mail.username=YOUR_EMAIL
+spring.mail.password=YOUR_EMAIL_PASSWORD
+
+```
+
+### ▶️ Running the Application
+#### Using Maven 
+```./mvnw spring-boot:run
+```
+Visit 👉 http://localhost:8080
 
 ---
 
