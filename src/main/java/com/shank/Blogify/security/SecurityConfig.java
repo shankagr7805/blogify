@@ -45,7 +45,7 @@ public class SecurityConfig {
             // 🔥 FIX: Disable CSRF for upload-image ALSO
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
-                    "/console/**",
+                    "/db-console/**",
                     "/upload-image"
                 )
             )
