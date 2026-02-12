@@ -166,10 +166,13 @@ public class AccountController {
     @ResponseBody
     public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) {
 
+        System.out.println("Upload API called...");
+
+        // ✅ Check empty file
         if (file.isEmpty()) {
             return Map.of(
-                "uploaded", false,
-                "error", Map.of("message", "Empty file")
+                    "uploaded", false,
+                    "error", Map.of("message", "Empty file")
             );
         }
 
@@ -179,26 +182,32 @@ public class AccountController {
                     cloudinary.uploader().upload(
                             file.getBytes(),
                             ObjectUtils.asMap(
-                                "folder", "blogify/posts",
-                                "width", 1200,
-                                "height", 1200,
-                                "crop", "limit",
-                                "quality", "auto",
-                                "fetch_format", "auto"
+                                    "folder", "blogify/posts",
+                                    "resource_type", "image",
+                                    "width", 1200,
+                                    "height", 1200,
+                                    "crop", "limit",
+                                    "quality", "auto",
+                                    "fetch_format", "auto"
                             )
                     );
 
             String imageUrl = uploadResult.get("secure_url").toString();
 
+            System.out.println("Uploaded Image URL: " + imageUrl);
+
+            // ✅ CKEditor REQUIRED RESPONSE FORMAT
             return Map.of(
-                "uploaded", true,
-                "url", imageUrl
+                    "uploaded", true,
+                    "url", imageUrl
             );
 
         } catch (Exception e) {
+            e.printStackTrace();
+
             return Map.of(
-                "uploaded", false,
-                "error", Map.of("message", "Image upload failed")
+                    "uploaded", false,
+                    "error", Map.of("message", e.getMessage())
             );
         }
     }

@@ -34,6 +34,9 @@ public class PostController {
     @Autowired
     public AccountService accountService;
 
+    @Autowired
+    private CloudinaryUtil cloudinaryUtil;
+
     @GetMapping("/post/{id}")
     public String getPost(@PathVariable Long id, Model model, Principal principal) {
         Optional<Post> optionalpost = postService.getbyId(id);
@@ -150,7 +153,7 @@ public class PostController {
         // 🔥 DELETE CLOUDINARY IMAGES
         List<String> imageUrls = ImageUtil.extractImageUrls(post.getBody());
         for (String url : imageUrls) {
-            CloudinaryUtil.deleteByUrl(url);
+            cloudinaryUtil.deleteByUrl(url);
         }
 
         // 🗑 DELETE POST

@@ -50,24 +50,29 @@
    <!-- CKEditor -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
-    <script>
-      ClassicEditor.create(document.querySelector('#editor'), {
-          ckfinder: {
-              uploadUrl: '/upload-image'
-          },
-          toolbar: [
-              'heading',
-              '|',
-              'bold', 'italic', 'link',
-              '|',
-              'imageUpload',
-              '|',
-              'undo', 'redo'
-          ]
-      }).catch(error => {
-          console.error(error);
-      });
-    </script>
+<script>
+ClassicEditor.create(document.querySelector('#editor'), {
+
+    ckfinder: {
+        uploadUrl: '/upload-image'
+    },
+
+    toolbar: [
+        'heading',
+        '|',
+        'bold','italic','link',
+        '|',
+        'imageUpload',
+        '|',
+        'undo','redo'
+    ]
+
+}).then(editor => {
+    console.log("Editor Ready");
+}).catch(error => {
+    console.error(error);
+});
+</script>
 </body>
 
 </html>

@@ -1,11 +1,7 @@
 package com.shank.Blogify.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import com.cloudinary.Cloudinary;
 
 @Configuration
@@ -13,10 +9,17 @@ public class CloudinaryConfig {
 
     @Bean
     public Cloudinary cloudinary() {
-        Map<String, String> config = new HashMap<>();
-        config.put("cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"));
-        config.put("api_key", System.getenv("CLOUDINARY_API_KEY"));
-        config.put("api_secret", System.getenv("CLOUDINARY_API_SECRET"));
-        return new Cloudinary(config);
+
+        String url = System.getenv("CLOUDINARY_URL");
+
+        System.out.println("====== CLOUDINARY DEBUG ======");
+        System.out.println("URL = " + url);
+        System.out.println("==============================");
+
+        if (url == null || url.isBlank()) {
+            throw new RuntimeException("CLOUDINARY_URL missing in ENV");
+        }
+
+        return new Cloudinary(url);
     }
 }
