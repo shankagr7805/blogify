@@ -3,7 +3,7 @@
 Blogify is a **production-ready blogging platform** built using **Spring Boot**, **Spring Security**, **Hibernate**, **Thymeleaf**, and **MySQL**.  
 It supports **authentication, role-based access control, rich-text posts with images, admin moderation, and cloud image storage**.
 
-🚀 **Live Demo:** *https://blogify-springboot.up.railway.app/*  
+🚀 **Live Demo:** *http://3.27.14.85:8080*  
 📦 **Tech Stack:** Java, Spring Boot, Spring Security, Hibernate, Thymeleaf, MySQL, Cloudinary, Bootstrap
 
 ---
