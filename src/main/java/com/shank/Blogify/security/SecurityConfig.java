@@ -27,6 +27,8 @@ public class SecurityConfig {
 
             "/console/**",
             "/post/**",
+            "/api/v1/posts",
+            "/api/v1/posts/evict-cache",
 
             "/css/**",
             "/js/**",

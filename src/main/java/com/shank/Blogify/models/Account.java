@@ -24,12 +24,14 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.io.Serializable;
 
 @Entity                                                                               //^ This annotation specifies that the class is an entity and is mapped to a database table.(Ye database table ka Java representation hai)
 @Getter
 @Setter
 @NoArgsConstructor                                                                  //^ This annotation generates a no-argument constructor for the class.
-public class Account {
+public class Account implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     //& Har object = DB ka ek row
     @Id

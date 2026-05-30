@@ -3,6 +3,7 @@ package com.shank.Blogify.models;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
+import java.io.Serializable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Post {
+public class Post implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
