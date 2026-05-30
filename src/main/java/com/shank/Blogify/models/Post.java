@@ -2,6 +2,8 @@ package com.shank.Blogify.models;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import java.io.Serializable;
 import jakarta.persistence.Entity;
@@ -36,6 +38,7 @@ public class Post implements Serializable {
 
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "account_id" , referencedColumnName = "id" , nullable = false)
     private Account account;

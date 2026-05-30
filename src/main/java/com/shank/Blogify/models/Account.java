@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -65,6 +67,7 @@ public class Account implements Serializable {
 
     private String role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account")                                                //^ OneToMany relationship i.e ek account ke paas kai posts ho sakte hain.
     private List<Post> posts;
 
