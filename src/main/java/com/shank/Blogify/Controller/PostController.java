@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,14 +27,17 @@ import com.shank.Blogify.util.ImageUtil;
 @Controller
 public class PostController {
     
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @Autowired
-    public AccountService accountService;
+    public final AccountService accountService;
 
-    @Autowired
-    private CloudinaryUtil cloudinaryUtil;
+    private final CloudinaryUtil cloudinaryUtil;
+
+    PostController(PostService postService, AccountService accountService, CloudinaryUtil cloudinaryUtil) {
+        this.postService = postService;
+        this.accountService = accountService;
+        this.cloudinaryUtil = cloudinaryUtil;
+    }
 
     @GetMapping("/post/{id}")
     public String getPost(@PathVariable Long id, Model model, Principal principal) {

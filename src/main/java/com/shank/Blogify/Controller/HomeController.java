@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +17,11 @@ import com.shank.Blogify.serivces.PostService;
 
 @Controller
 public class HomeController {
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
+    HomeController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping("/")
     public String home(Model model, @RequestParam(required = false, name = "sort_by", defaultValue = "createdAt") String sort_by,

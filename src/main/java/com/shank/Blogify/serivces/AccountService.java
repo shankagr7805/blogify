@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,11 +20,15 @@ import com.shank.Blogify.util.constants.Roles;
 
 @Service                                                                          //^ Ye annotation indicate karta hai ki ye class ek service component hai jo business logic ko handle karta hai. Helps in making the class a Spring bean. Controller aur Repository ke beech mein kaam karta hai.    
 public class AccountService implements UserDetailsService{
-    @Autowired                                                          //^ Ye annotation Spring ko batata hai ki wo is dependency ko automatically inject kare. ek instance of AccountRepository provide kare with the help of Spring bean container.
-    private AccountRepository accountRepository;
+    //^ Ye annotation Spring ko batata hai ki wo is dependency ko automatically inject kare. ek instance of AccountRepository provide kare with the help of Spring bean container.
+    private final AccountRepository accountRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+        this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Account save(Account account) {
 

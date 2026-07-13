@@ -3,11 +3,10 @@ package com.shank.Blogify.Controller;
 import com.shank.Blogify.models.Post;
 import com.shank.Blogify.serivces.PostService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMapping;  
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,11 +20,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class PostRestController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    PostRestController(PostService postService, RedisTemplate<String, Object> redisTemplate) {
+        this.postService = postService;
+        this.redisTemplate = redisTemplate;
+    }
 
     // ── GET /api/v1/posts  (paginated, Redis-cached) ──────────
     @SuppressWarnings("unchecked")

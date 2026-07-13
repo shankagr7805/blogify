@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -36,20 +35,23 @@ import com.shank.Blogify.util.email.EmailDetails;
 @Controller
 public class AccountController {
 
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private Cloudinary cloudinary;
+    private final Cloudinary cloudinary;
 
     @Value("${password.token.reset.timeout.minutes}")
     private int password_token_timeout;
 
     @Value("${site.domain}")
     private String site_domain;
+
+    AccountController(Cloudinary cloudinary, EmailService emailService, AccountService accountService) {
+        this.cloudinary = cloudinary;
+        this.emailService = emailService;
+        this.accountService = accountService;
+    }
 
     @GetMapping("/register")
     public String register(Model model) {

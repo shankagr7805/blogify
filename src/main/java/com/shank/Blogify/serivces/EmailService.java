@@ -1,6 +1,5 @@
 package com.shank.Blogify.serivces;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,11 +10,14 @@ import com.shank.Blogify.util.email.EmailDetails;
 @Service
 public class EmailService {
     
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String sender;
+
+    EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     public Boolean sendSimpleEmail(EmailDetails emailDetails) {
         try {

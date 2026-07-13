@@ -1,6 +1,5 @@
 package com.shank.Blogify.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +15,14 @@ import com.shank.Blogify.serivces.PostService;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
+
+    AdminController(PostService postService, AccountService accountService) {
+        this.postService = postService;
+        this.accountService = accountService;
+    }
 
     @GetMapping
     public String adminDashboard(Model model) {

@@ -1,6 +1,5 @@
 package com.shank.Blogify.config;
 import java.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +14,18 @@ import com.shank.Blogify.util.constants.Roles;
 
 @Component                                                             //^Spring component banaya taaki ye app start hote hi scan ho jaye
 public class SeedData implements CommandLineRunner {                    //^App start hote hi default data insert hoga db me
-    @Autowired                                                           //^CommandLineRunner interface implement kiya taaki run method override kar saku
-    private PostService postService;
+    //^CommandLineRunner interface implement kiya taaki run method override kar saku
+    private final PostService postService;
 
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
 
-    @Autowired
-    private AuthorityService authorityService;
+    private final AuthorityService authorityService;
+
+    SeedData(PostService postService, AccountService accountService, AuthorityService authorityService) {
+        this.postService = postService;
+        this.accountService = accountService;
+        this.authorityService = authorityService;
+    }
 
     @Override
     public void run(String... args) {
